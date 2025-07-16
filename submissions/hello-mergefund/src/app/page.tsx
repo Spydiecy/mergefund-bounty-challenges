@@ -18,6 +18,7 @@ function MergeFundReveal() {
   const [currentText, setCurrentText] = useState('');
   const [glowIntensity, setGlowIntensity] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [waitingForMining, setWaitingForMining] = useState(false);
 
   // Track mouse movement for interactive effects
   useEffect(() => {
@@ -61,6 +62,17 @@ function MergeFundReveal() {
       await new Promise(resolve => setTimeout(resolve, 30));
     }
     await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Stage 1.5: Wait for user to start mining
+    setRevealStage(1.5);
+    setWaitingForMining(true);
+    setIsRevealing(false);
+  };
+
+  // Start mining process (called when user clicks "Start Mining")
+  const startMining = async () => {
+    setWaitingForMining(false);
+    setIsRevealing(true);
 
     // Stage 2: Enhanced blockchain effect with staggered animations
     setRevealStage(2);
@@ -175,6 +187,40 @@ function MergeFundReveal() {
               <div className="text-sm text-slate-400 font-mono">
                 Calibrating neural networks... {Math.floor(glowIntensity)}%
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Wait for mining interaction */}
+        {revealStage === 1.5 && (
+          <div className="space-y-8 animate-fade-in">
+            <div className="text-center space-y-6">
+              <div className="w-16 h-16 mx-auto bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center animate-pulse">
+                <span className="text-2xl">✓</span>
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-3xl font-light text-slate-600">
+                  Blockchain Initialized Successfully!
+                </h2>
+                <p className="text-slate-400">
+                  Ready to mine your first quantum block
+                </p>
+              </div>
+              <button
+                onClick={startMining}
+                className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg 
+                          transform transition-all duration-300 hover:scale-105 hover:shadow-2xl 
+                          border border-blue-400/30 backdrop-blur-sm relative overflow-hidden"
+                style={{
+                  boxShadow: '0 0 30px rgba(59, 130, 246, 0.5)',
+                  animation: 'bounce 2s infinite'
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10 flex items-center gap-3">
+                  ⛏️ Start Mining Process
+                </span>
+              </button>
             </div>
           </div>
         )}
